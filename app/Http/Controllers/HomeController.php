@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Building;
-use App\Models\Unit;
-use App\Models\Tenant;
+use App\Models\Program;
+use App\Models\Dojo;
+use App\Models\Student;
 class HomeController extends Controller
 {
     /**
@@ -25,9 +25,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-      $total_buildings = Building::count();
-      $total_units     = Unit::count();
-      $total_tenants   = Tenant::count();
+      $role = auth()->user()->role;
+      $dojo_id = $this->user_dojo(auth()->user()->id);
+      if(auth()->user()->role == 1)
+      {
+        $total_students     = Student::count();
+        $total_programs   = Program::count();
+      }
+      else
+      if(auth()->user()->role == 2)
+      {
+        $total_students     = Student::where('dojo_id', $dojo_id)->count();
+        $total_programs   = Program::where('dojo_id', $dojo_id)->count();
+      }
+      $total_dojos = Dojo::count();
+
+
         return view('home', get_defined_vars());
     }
 }

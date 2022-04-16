@@ -2,6 +2,72 @@
 
 use Illuminate\Support\Facades\Route;
 
+// custom
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DojoController;
+use App\Http\Controllers\GradingPolicyController;
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/', function () {
+    return view('auth.login');
+});
+
+Auth::routes();
+
+Route::prefix('admin')->middleware('isAdmin', 'auth')->group(function(){
+    Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
+    Route::get('profile',    'AdminController@profile')->name('admin.profile');
+    Route::get('settings',   'AdminController@settings')->name('admin.settings');
+    Route::get('attendance', [App\Http\Controllers\AttendanceController::class, 'index'])->name('admin.attendance.show');
+});
+
+Route::prefix('attendance')->name('attendance.')->middleware('isAdmin', 'auth')->group(function(){
+    Route::post('/save', [App\Http\Controllers\AttendanceController::class, 'store'])->name('save');
+    Route::get('attendance/daily', [App\Http\Controllers\AttendanceController::class, 'daily'])->name('daily');
+    Route::post('attendance/daily-report', [App\Http\Controllers\AttendanceController::class, 'daily_report'])->name('daily-report');
+    Route::get('attendance/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary'])->name('attendance-summary');
+    Route::post('attendance/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary_report'])->name('attendance-summary-report');
+});
+
+
+Route::prefix('grading-policy')->name('grading-policy.')->middleware('isAdmin', 'auth')->group(function () {
+    Route::get('/show', [App\Http\Controllers\GradingPolicyController::class, 'index'])->name('show');
+    Route::get('/edit/{id?}', [App\Http\Controllers\GradingPolicyController::class, 'edit'])->name('edit');
+    Route::get('/delete/{id?}', [App\Http\Controllers\GradingPolicyController::class, 'destroy'])->name('delete');
+    Route::post('/save', [App\Http\Controllers\GradingPolicyController::class, 'store'])->name('save');
+});
+
+
+Route::prefix('dojo')->middleware('isDojo', 'auth')->group(function(){
+    Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dojo.dashboard');
+    Route::get('profile',   'DojoController@profile')->name('dojo.profile');
+    Route::get('settings',  'DojoController@settings')->name('dojo.settings');
+});
+
+Route::prefix('isStudent', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->group(function(){
+    Route::get('dashboard', 'StudentController@index')->name('student.dashboard');
+    Route::get('profile',   'StudentController@profile')->name('student.profile');
+    Route::get('settings',  'StudentController@settings')->name('student.settings');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,15 +80,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
-
-
-
-Auth::routes();
-Route::middleware('auth')->group(function () {
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
+//
+//
+//
+//
+// Auth::routes();
+// Route::middleware('auth')->group(function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/logout', function(){
@@ -30,84 +96,36 @@ Route::get('/logout', function(){
        Auth::logout();
        return redirect('login');
 })->name('auth.logout');
-Route::prefix('buildings')->name('buildings.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\BuildingController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\BuildingController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\BuildingController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\BuildingController::class, 'store'])->name('save');
+
+Route::prefix('dojos')->name('dojos.')->middleware('isAdmin', 'auth')->group(function () {
+    Route::get('/show', [App\Http\Controllers\DojoController::class, 'index'])->name('show');
+    Route::get('/edit/{id?}', [App\Http\Controllers\DojoController::class, 'edit'])->name('edit');
+    Route::get('/delete/{id?}', [App\Http\Controllers\DojoController::class, 'destroy'])->name('delete');
+    Route::post('/save', [App\Http\Controllers\DojoController::class, 'store'])->name('save');
+});
+
+Route::prefix('events')->name('events.')->middleware('isAdmin', 'auth')->group(function () {
+    Route::post('/add', [App\Http\Controllers\EventController::class, 'add'])->name('add');
+    Route::get('/show', [App\Http\Controllers\EventController::class, 'index'])->name('show');
+    Route::post('/create', [App\Http\Controllers\EventController::class, 'create'])->name('create');
+    Route::post('/update', [App\Http\Controllers\EventController::class, 'update']);
+    Route::post('/delete', [App\Http\Controllers\EventController::class, 'destroy']);
+});
+
+Route::prefix('students')->name('students.')->middleware('isAdminOrDojo', 'auth')->group(function () {
+    Route::get('/show', [App\Http\Controllers\StudentController::class, 'index'])->name('show');
+    Route::get('/edit/{id?}', [App\Http\Controllers\StudentController::class, 'edit'])->name('edit');
+    Route::get('/copy/{id?}', [App\Http\Controllers\StudentController::class, 'copy'])->name('copy');
+    Route::get('/delete/{id?}', [App\Http\Controllers\StudentController::class, 'destroy'])->name('delete');
+    Route::post('/save', [App\Http\Controllers\StudentController::class, 'store'])->name('save');
 });
 
 
-Route::prefix('extras')->name('extras.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\ExtrasController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\ExtrasController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\ExtrasController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\ExtrasController::class, 'store'])->name('save');
-});
-
-Route::prefix('vouchers')->name('vouchers.')->group(function () {
-  Route::get('/generate', [App\Http\Controllers\VoucherController::class, 'create']);
-    Route::get('/show', [App\Http\Controllers\VoucherController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\VoucherController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\VoucherController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\VoucherController::class, 'store'])->name('save');
-});
-
-Route::prefix('receivings')->name('receivings.')->group(function () {
-    Route::get('/generate', [App\Http\Controllers\ReceivingController::class, 'create']);
-    Route::get('/receivables', [App\Http\Controllers\ReceivingController::class, 'get_receivables']);
-    Route::get('/show', [App\Http\Controllers\ReceivingController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\ReceivingController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\ReceivingController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\ReceivingController::class, 'store'])->name('save');
-
-    Route::get('/print/{id?}', [App\Http\Controllers\ReceivingController::class, 'print'])->name('print');
-});
-
-Route::prefix('ledger')->name('ledger.')->group(function (){
-    Route::get('/create', [App\Http\Controllers\LedgerController::class, 'create'])->name('create');
-    Route::post('/show', [App\Http\Controllers\LedgerController::class, 'show'])->name('show');
-    Route::get('/rent-detail', [App\Http\Controllers\LedgerController::class, 'rent_detail'])->name('rent_detail');
-});
 
 
-Route::prefix('units')->name('units.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\UnitController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\UnitController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\UnitController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\UnitController::class, 'store'])->name('save');
-});
-
-Route::prefix('tenants')->name('tenants.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\TenantController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\TenantController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\TenantController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\TenantController::class, 'store'])->name('save');
-});
-
-Route::prefix('expensetypes')->name('expensetypes.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\ExpensetypeController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\ExpensetypeController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\ExpensetypeController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\ExpensetypeController::class, 'store'])->name('save');
-});
-
-Route::prefix('expenses')->name('expenses.')->group(function () {
-    Route::get('/show', [App\Http\Controllers\ExpenseController::class, 'index'])->name('show');
-    Route::get('/edit/{id?}', [App\Http\Controllers\ExpenseController::class, 'edit'])->name('edit');
-    Route::get('/delete/{id?}', [App\Http\Controllers\ExpenseController::class, 'destroy'])->name('delete');
-    Route::post('/save', [App\Http\Controllers\ExpenseController::class, 'store'])->name('save');
-});
-
-Route::prefix('pl')->name('pl.')->group(function (){
-    Route::get('/show', [App\Http\Controllers\ProfitLossController::class, 'show'])->name('show');
-    Route::post('/profit-loss', [App\Http\Controllers\ProfitLossController::class, 'generate'])->name('pl');
-});
-
-
-});
-
-
-Route::get('login', function () {
-    return view('auth.login');
-})->name('login');
+// });
+//
+//
+// Route::get('login', function () {
+//     return view('auth.login');
+// })->name('login');

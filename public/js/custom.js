@@ -8,7 +8,31 @@ $.ajaxSetup({
 // datatable scripts
 /* COLUMN FILTER  */
 	var otable = $('#datatable_fixed_column').DataTable(
-		{"pageLength": 25}
+		{
+			"pageLength": 25,
+			dom: 'Bfrtip',
+	        buttons: [
+	            {
+	                extend: 'copyHtml5',
+	                exportOptions: {
+	                    columns: [ 0, ':visible' ]
+	                }
+	            },
+	            {
+	                extend: 'excelHtml5',
+	                exportOptions: {
+	                    columns: ':visible'
+	                }
+	            },
+	            {
+	                extend: 'pdfHtml5',
+	                exportOptions: {
+	                    columns: [ 0, 1, 2, 5 ]
+	                }
+	            },
+	            'colvis'
+	        ]
+		}
 );
 $(".select2").select2();
 $(".select2").css("width", "100%");
@@ -59,6 +83,7 @@ $('.mydatepicker').datepicker({
 			$('#finishdate').datepicker('option', 'minDate', selectedDate);
 		}
 	});
+
 
 $('.month-day-picker').datepicker({
 	changeYear: false,
@@ -918,4 +943,63 @@ function toggleThis(id,x){
 			 $("#profitLoss").html(profitLossReport);
 		 });
 	 }
+ }
+
+
+
+
+
+
+
+
+
+ function upload_attendance()
+ {
+ 	$("#attendance_form").on('submit',(function(e){
+    let formAction = $(this).attr('action');
+   	var route_prefix = $("#route_prefix").val();
+ 		var edit_id = $("input[name=id]").val();
+   	$(".overlay").show();
+   	$("button.save").prop("disabled",true);
+      e.preventDefault();
+   		$.ajax({
+   			url: formAction, // Url to which the request is send
+   			type: "POST",             // Type of request to be send, called as method
+   			data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+   			contentType: false,       // The content type used when sending data to the server.
+   			cache: false,             // To unable request pages to be cached
+   			processData:false,        // To send DOMDocument or non processed data file it is set to false
+   			success: function(response)   // A function to be called if request succeeds
+   			{
+   				$( "#attendance_form" ).unbind( "submit");
+   				if(response['success']==1)
+  				{
+   					_success(response['msg']);
+						var data = response['data'];
+						var status = "Total Records = "+data['total']+ " Uploaded = "+data['uploaded'];
+						if(data['total'] == data['uploaded'])
+						{
+							$("#response").html('<div class="alert alert-success">'+status+'</div>');
+						}
+						else
+						{
+							$("#response").html('<div class="alert alert-danger">'+status+'</div>');
+						}
+   					$("button.save").prop("disabled",false);
+   					$(".overlay").hide();
+   				}
+   				else
+   				{
+   					var error = "";
+   					for(var a = 0; a<response['msg'].length; a++)
+   					{
+   						error += response['msg'][a] + "<br/>";
+   					}
+   					_error(error);
+   					$("button.save").prop("disabled",false);
+   					$(".overlay").hide();
+   				}
+   			}
+   		});
+    }));
  }

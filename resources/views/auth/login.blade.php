@@ -23,7 +23,7 @@
 				<form method="post" class="login100-form validate-form p-b-33 p-t-5" action="{{ route('login') }}">
                     @csrf
 					<div class="wrap-input100 validate-input" data-validate = "Enter username">
-                        <input class="input100 @error('email') is-invalid @enderror" type="email" name="email"  value="{{ old('email') }}" placeholder="shazman@yahoo.com" autofocus autocomplete="off">
+                        <input class="input100 @error('login') is-invalid @enderror" type="text" name="login"  value="{{ old('login') }}" placeholder="shazman@yahoo.com" autofocus autocomplete="off">
 						<span class="focus-input100" data-placeholder="&#xe82a;"></span>
 					</div>
 
@@ -31,7 +31,7 @@
 						<input class="input100 @error('password') is-invalid @enderror" type="password" name="password" placeholder="Password">
 						<span class="focus-input100" data-placeholder="&#xe80f;"></span>
 					</div>
-					@error('email')
+					@error('login')
 							<span class="invalid-feedback d-block m-b-10 m-t-10 text-center" role="alert">
 									<strong>{{ $message }}</strong>
 							</span>
@@ -62,6 +62,3 @@
 <!--===============================================================================================-->
 </body>
 </html>
-
-
-

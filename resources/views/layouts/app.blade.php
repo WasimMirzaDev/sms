@@ -34,7 +34,7 @@
 		<link rel="icon" href="{{asset('img/favicon/favicon.ico')}}" type="image/x-icon">
 
 		<!-- #GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 
 		<!-- #APP SCREEN / ICONS -->
 		<!-- Specifying a Webpage Icon for Web Clip
@@ -105,7 +105,16 @@
 			<div id="logo-group">
 
 				<!-- PLACE YOUR LOGO HERE -->
-				<span id="logo"> <img src="{{asset('img/logo.png')}}" alt="SmartAdmin"> </span>
+				<span id="logo"
+				style="
+				color: yellowgreen;
+		    font-weight: bold;
+		    font-size: 18px;
+		    font-style: italic;
+		    margin-left: 45px;
+		}
+				"
+				> BMS KARATE </span>
 				<!-- END LOGO PLACEHOLDER -->
 
 				<!-- Note: The activity badge color changes when clicked and resets the number to 0
@@ -337,46 +346,17 @@
 			</div>
 			<!-- end user info -->
 
-			<nav>
-				<ul>
-					<li>
-						<a href="{{route('home')}}" title="User"><span id="dashboard_menu" class="menu-item-parent">Dashboard</span></a>
-					</li>
-					<li>
-						<a href="{{route('buildings.show')}}" title="User"><span id="buildings_menu" class="menu-item-parent">Addresses</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('units.show')}}" title="Brand"><span id="units_menu" class="menu-item-parent">Units</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('tenants.show')}}" title="Category"><span id="tenants_menu" class="menu-item-parent">Tenant</span></a>
-					</li>
-					<li>
-						<a href="{{route('extras.show')}}" title="User"><span id="extra_menu" class="menu-item-parent">Charges Types</span></a>
-					</li>
-					<li>
-						<a href="{{route('expensetypes.show')}}" title="User"><span id="expensetype_menu" class="menu-item-parent">Expense Types</span></a>
-					</li>
-					<li>
-						<a href="{{route('expenses.show')}}" title="User"><span id="expense_menu" class="menu-item-parent">Expenses</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('vouchers.show')}}" title="Category"><span id="generate_voucher_menu" class="menu-item-parent">Generate Voucher</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('receivings.show')}}" title="Category"><span id="payment_receiving_menu" class="menu-item-parent">Payment Receivings</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('ledger.create')}}" title="Category"><span id="ledger_menu" class="menu-item-parent">Account Statement / Ledger</span></a>
-					</li>
-					<li class="">
-						<a target="_blank" href="{{route('ledger.rent_detail')}}" title="Category"><span id="rent_detail_menu" class="menu-item-parent">Current Rent Details</span></a>
-					</li>
-					<li class="">
-						<a href="{{route('pl.show')}}" title="Category"><span id="pl_menu" class="menu-item-parent">Profit/Loss Report</span></a>
-					</li>
-				</ul>
-			</nav>
+			@if(auth()->user()->role == 1)
+				@include('layouts.nav.admin')
+			@endif
+
+			@if(auth()->user()->role == 2)
+				@include('layouts.nav.dojo')
+			@endif
+
+			@if(auth()->user()->role == 3)
+				@include('layouts.nav.student')
+			@endif
 
 			<span class="minifyme" data-action="minifyMenu">
 				<i class="fa fa-arrow-circle-left hit"></i>
@@ -438,7 +418,7 @@
 		<div class="page-footer">
 			<div class="row">
 				<div class="col-xs-12 col-sm-6">
-					<span class="txt-color-white">Apartment Management System</span>
+					<span class="txt-color-white">Student Management System</span>
 				</div>
 
 				<div class="col-xs-6 col-sm-6 text-right hidden-xs" style="display:none;">
@@ -508,14 +488,14 @@
 		<script data-pace-options='{ "restartOnRequestAfter": true }' src="{{asset('js/plugin/pace/pace.min.js')}}"></script>
 
 		<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script>
 			if (!window.jQuery) {
 				document.write('<script src="{{asset('js/libs/jquery-2.1.1.min.js')}}"><\/script>');
 			}
 		</script>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script>
 			if (!window.jQuery.ui) {
 				document.write('<script src="{{asset('js/libs/jquery-ui-1.10.3.min.js')}}"><\/script>');
@@ -561,6 +541,8 @@
 		<!-- FastClick: For mobile devices -->
 		<script src="{{asset('js/plugin/fastclick/fastclick.min.js')}}"></script>
 
+
+
 		<!--[if IE 8]>
 
 		<h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
@@ -584,6 +566,7 @@
 		<!-- PAGE RELATED PLUGIN(S)
 		<script src="..."></script>-->
 		<script src="{{asset('js/plugin/moment/moment.min.js')}}"></script>
+		<script src="{{asset('js/plugin/fullcalendar/jquery.fullcalendar.min.js')}}"></script>
 		<script src="{{asset('js/plugin/chartjs/chart.min.js')}}"></script>
 
 		<script src="{{asset('js/notification/SmartNotification.min.js')}}"></script>
@@ -594,10 +577,17 @@
 		<script src="{{asset('js/plugin/datatables/dataTables.bootstrap.min.js')}}"></script>
 		<script src="{{asset('js/plugin/datatable-responsive/datatables.responsive.min.js')}}"></script>
 		<script src="{{asset('js/custom.js')}}"></script>
+		<script src="{{asset('js/calendar-functions.js')}}"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				pageSetUp();
 			});
 		</script>
+		<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+		<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+		<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
 	</body>
 </html>

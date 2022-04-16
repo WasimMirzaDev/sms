@@ -18,12 +18,29 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, ...$guards)
     {
+        // $guards = empty($guards) ? [null] : $guards;
+        //
+        // foreach ($guards as $guard) {
+        //     if (Auth::guard($guard)->check()) {
+        //         return redirect(RouteServiceProvider::HOME);
+        //     }
+        // }
+        //
+        // return $next($request);
+
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
             }
+            // if( Auth::guard($guard)->check() && Auth::user()->role == 1){
+            //     return redirect()->route('admin.dashboard');
+            // }elseif( Auth::guard($guard)->check() && Auth::user()->role == 2){
+            //     return redirect()->route('dojo.dashboard');
+            // }elseif( Auth::guard($guard)->check() && Auth::user()->role == 3){
+            //     return redirect()->route('student.dashboard');
+            // }
         }
 
         return $next($request);
