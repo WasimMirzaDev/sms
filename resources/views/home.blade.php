@@ -17,7 +17,7 @@
    <div class="row">
      @if(auth()->user()->role == 1)
       <div class="col-md-3">
-         <a class="info-tiles tiles-green has-footer" href="#">
+         <a class="info-tiles tiles-green has-footer" href="{{route('dojos.show')}}">
             <div class="tiles-heading">
                <div class="text-left">Total Dojos</div>
             </div>
@@ -30,7 +30,7 @@
          </a>
       </div>
       <div class="col-md-3">
-         <a class="info-tiles tiles-blue has-footer" href="#">
+         <a class="info-tiles tiles-blue has-footer" href="{{route('students.show')}}">
             <div class="tiles-heading">
                <div class="text-left">Total Students</div>
             </div>
@@ -100,7 +100,7 @@
 
       @if(auth()->user()->role == 2)
       <div class="col-md-3">
-         <a class="info-tiles tiles-green has-footer" href="#">
+         <a class="info-tiles tiles-green has-footer" href="{{route('students.show')}}">
             <div class="tiles-heading">
                <div class="text-left">Total Students</div>
             </div>

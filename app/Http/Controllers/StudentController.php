@@ -28,8 +28,8 @@ class StudentController extends Controller
      {
        $dojo_id = $this->user_dojo(auth()->user()->id);
        $dojos = [];
-       $ranks = Rank::where('dojo_id', $dojo_id)->get();
-       $programs = Program::where('dojo_id', $dojo_id)->get();
+       // $ranks = Rank::where('dojo_id', $dojo_id)->get();
+       // $programs = Program::where('dojo_id', $dojo_id)->get();
        $list = Student::where('dojo_id', $dojo_id)->get();
      }
      else

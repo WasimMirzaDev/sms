@@ -77,15 +77,31 @@ $(document).ready(function() {
           droppable: false,
           selectable: true,
           selectHelper: true,
-          events: "/events/show",
-          // events: [{
-          //   id: 10,
-          //   title: "29 to 30 event",
-          //   start: "2022-04-27T00:00:00",
-          //   end: "2022-04-28T00:00:00",
-          //   color: "navy",
-          //   fullDay: "true",
-          // }],
+          events: "show",
+
+          eventMouseover: function (data, event, view) {
+            var mydate = new Date(data.start);
+                      tooltip = '<div class="tooltiptopicevent" style="color:white;width:auto;height:auto;background:'+data.color+';position:absolute;z-index:10001;padding:10px 20px 10px 20px ;  line-height: 20%; text-align:center; border-radius:4px;">' + 'title: ' + ': ' + data.ename +'</div>';
+
+                      $("body").append(tooltip);
+                      $(this).mouseover(function (e) {
+                          $(this).css('z-index', 10000);
+                          $('.tooltiptopicevent').fadeIn('500');
+                          $('.tooltiptopicevent').fadeTo('10', 1.9);
+                      }).mousemove(function (e) {
+                          $('.tooltiptopicevent').css('top', e.pageY + 10);
+                          $('.tooltiptopicevent').css('left', e.pageX + 20);
+                      });
+
+
+                  },
+                  eventMouseout: function (data, event, view) {
+                      $(this).css('z-index', 8);
+
+                      $('.tooltiptopicevent').remove();
+
+                  },
+
           select: function (start, end, allDay) {
            start=moment(start).format('Y-MM-DD HH:mm');
            end = new Date(end);
@@ -93,32 +109,6 @@ $(document).ready(function() {
            end=moment(end).format('Y-MM-DD HH:mm');
 
            addNewEvent(start, end, 0);
-             var title = false;
-             if (title) {
-
-                 $.ajax({
-                     url: "/events/create",
-                     data: {
-                         title: title,
-                         start: start,
-                         end: end,
-                         type: 'add'
-                     },
-                     type: "POST",
-                     success: function (data) {
-                         alert("Event Created Successfully");
-                         calendar.fullCalendar('renderEvent',
-                         {
-                           id: data.id,
-                           title: title,
-                           start: data.start,
-                           end: data.end,
-                           allDay: allDay
-                      },true);
-                         calendar.fullCalendar('unselect');
-                     }
-                 });
-             }
          },
 
 
@@ -127,7 +117,7 @@ $(document).ready(function() {
            start=moment(event.start).format('Y-MM-DD HH:mm:ss');
            end=moment(event.end).format('Y-MM-DD HH:mm:ss');
            $.ajax({
-               url: '/events/update',
+               url: 'update',
                data: {
                    title: event.title,
                    start: start,
@@ -141,13 +131,9 @@ $(document).ready(function() {
                }
            });
        },
-
-
                    eventClick: function (event) {
                      addNewEvent('', '', event.id);
                    },
-
-
           eventRender: function (event, element, icon) {
               if (event.allDay === 'true') {
                          event.allDay = true;
@@ -249,10 +235,10 @@ function saveEvent()
             $("#calendar").fullCalendar('renderEvent',
             {
               id:    data['id'],
-              title: data['title'],
               start: data['start'],
-              end:   data['end'],
+              end: data['end'],
               color: data['color'],
+              ename: data['title'],
               allDay: false
          },true);
             $("#calendar").fullCalendar('unselect');
@@ -276,7 +262,7 @@ function saveEvent()
 function addNewEvent(start='', end='', id)
 {
   $.ajax({
-    url: '/events/add',
+    url: 'add',
     method: 'post',
     data: {start:start, end:end, id:id},
     success: function(response)
@@ -298,7 +284,7 @@ function deleteEvent(id)
 	}, function(ButtonPressed) {
 		if (ButtonPressed === "Yes") {
 			$(".overlay").show();
-			var formAction = "/events/delete";
+			var formAction = "delete";
 		 $.post(formAction,{id:id},function(data){
 			 if(data['success'] == 1)
 			 {
@@ -318,4 +304,18 @@ function deleteEvent(id)
 		 _error('You pressed No');
 		}
 	});
+}
+function refetch_events(dojo_id)
+{
+  var events = {
+          url: "show",
+          type: 'get',
+          data: {
+              dojo_id: dojo_id
+          }
+      }
+
+      $('#calendar').fullCalendar('removeEventSource', events);
+      $('#calendar').fullCalendar('addEventSource', events);
+      // $('#calendar').fullCalendar('refetchEvents');
 }

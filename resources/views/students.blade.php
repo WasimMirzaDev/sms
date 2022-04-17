@@ -111,7 +111,7 @@ $route_prefix = "students.";
                               <div class="row" style="margin-top:5px;">
                                 <section class="col col-6">
                                   <label for="name" class="label" style="font-weight:bold;">Country:</label>
-                                  <select class="select2" name="rank_id">
+                                  <select class="select2" name="country">
                                     <option value="Canada">Canada</option>
                                   </select>
                                 </section>
@@ -214,7 +214,7 @@ $route_prefix = "students.";
                                 <section class="col col-6">
                                   <label for="name" class="label" style="font-weight:bold;">Rank:</label>
                                   <select class="select2" name="rank_id">
-                                    <option value="">Select Rank</option>
+                                    <option value="0">Select Rank</option>
                                     @if(!empty($ranks))
                                       @foreach($ranks as $rank)
                                         <option {{isset($r->rank_id) && $r->rank_id == $rank->id ? 'selected' : ''}} value="{{$rank->id}}">{{$rank->name}}</option>
@@ -228,7 +228,7 @@ $route_prefix = "students.";
                                    <section class="col col-6">
                                      <label for="name" class="label" style="font-weight:bold;">Program:</label>
                                      <select class="select2" name="program_id">
-                                       <option value="">Select Program</option>
+                                       <option value="0">Select Program</option>
                                        @if(!empty($programs))
                                          @foreach($programs as $program)
                                            <option {{isset($r->program_id) && $r->program_id == $program->id ? 'selected' : ''}} value="{{$program->id}}">{{$program->name}}</option>

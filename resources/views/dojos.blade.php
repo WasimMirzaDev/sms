@@ -132,10 +132,10 @@ label, .col {
                                 </section>
                               </div>
                               <div class="row">
-                                <section class="col col-6">
+                                <section class="col col-6" style="display:none;">
                                   Identifier:<small style="color:red;">*</small>
                                   <label class="input" autocomplete="off">
-                                    <input type="text" autocomplete="off" name="identifier" value="{{!empty($d->id) ? $d->identifier : old('identifier')}}" placeholder="Identifier">
+                                    <input type="text" autocomplete="off" name="identifier" value="0" placeholder="Identifier">
                                   </label>
                                 </section>
                                 <section class="col col-md-4" style="margin-top:20px;">

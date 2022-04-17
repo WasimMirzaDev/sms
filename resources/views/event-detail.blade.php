@@ -4,7 +4,6 @@
     display:none !important;
   }
 </style>
-
 <form method="post" id="event_form" action="{{route('events.create')}}">
 <div class="modal-content">
    <div class="modal-header" style="color:white; background:#353D4B;">
@@ -48,6 +47,21 @@
                      </select>
                   </div>
                </div>
+               @if(auth()->user()->role == 1)
+                <div class="row" style="margin-top:10px;">
+                  <div class="col col-md-6">
+                     <b>Dojo:</b><small style="color:red;">*</small>
+                     <select class="form-control" onchange="" name="dojo">
+                       <option value="">Select</option>
+                       @if(!empty($dojos))
+                         @foreach($dojos as $dojo)
+                           <option   {{!empty($dojo_id) && $dojo_id == $dojo->id ? 'selected' : '' }}  value="{{$dojo->id}}">{{$dojo->name}}</option>
+                         @endforeach
+                       @endif
+                      </select>
+                   </div>
+                  </div>
+                  @endif
                <div class="row" style="margin-top:10px;">
                   <div class="col col-md-12">
                      <b>Note:</b>
@@ -56,6 +70,7 @@
                </div>
             </div>
             <div id="manage_student" class="tab-pane fade">
+              @if(!empty($list[0]))
               <table id="mydatatable" class="display table table-striped table-bordered" width="100%">
                  <thead>
                     <tr>
@@ -82,8 +97,9 @@
                     </tr>
                  </thead>
                  <tbody>
-                    @if(!empty($list))
-                      @php $sr = 1
+
+                      @php
+                      $sr = 1
                       @endphp
                       @foreach($list as $l)
                       <tr id="row_{{$l->id}}">
@@ -94,9 +110,16 @@
                          <td>{{!empty($l->dojo->name) ? $l->dojo->name : ''}}</td>
                       </tr>
                       @endforeach
-                    @endif
                  </tbody>
               </table>
+              @endif
+
+              @if(empty($list[0]))
+              <br/>
+              <div class="alert alert-info">
+                No students found..!
+              </div>
+              @endif
 
             </div>
          </div>

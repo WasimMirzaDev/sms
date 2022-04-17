@@ -18,6 +18,10 @@
  * - CUSTOM STYLES
  */
 
+ .demo{
+   display:none !important;
+ }
+
 li, a, tr {
   cursor:pointer !important;
 }

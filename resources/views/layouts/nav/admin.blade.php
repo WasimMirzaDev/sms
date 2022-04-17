@@ -16,7 +16,7 @@
       <a href="{{route('grading-policy.show')}}" title="Attendance Ranking"><span id="attendance_ranking_menu" class="menu-item-parent">Attendance Ranking Policy</span></a>
     </li>
     <li>
-      <a href="{{route('admin.attendance.show')}}" title="Upload Attendance"><span id="attendance_menu" class="menu-item-parent">Upload Attendance</span></a>
+      <a href="{{route('attendance.upload')}}" title="Upload Attendance"><span id="attendance_menu" class="menu-item-parent">Upload Attendance</span></a>
     </li>
     <li>
       <a href="{{route('attendance.daily')}}" title="Daily Attendance"><span id="attendance_daily_menu" class="menu-item-parent">View Daily Attendance</span></a>

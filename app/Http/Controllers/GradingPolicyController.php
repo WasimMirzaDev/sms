@@ -13,7 +13,7 @@ class GradingPolicyController extends Controller
     */
    public function index()
    {
-       $list = AttendanceGrade::all();
+       $list = AttendanceGrade::where('user_id', auth()->user()->id)->get();
        return view('grading-policy',compact('list'));
    }
 
@@ -45,7 +45,8 @@ class GradingPolicyController extends Controller
      [
        'grade' => $request->grade,
        'from_value' => $request->from_value,
-       'to_value' => $request->to_value
+       'to_value' => $request->to_value,
+       'user_id' => auth()->user()->id
      ]);
      return redirect()->route('grading-policy.show')
                      ->with('success','Policy created successfully.');

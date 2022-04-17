@@ -76,7 +76,7 @@ $validator = Validator::make($request->all(), [
   // 'email' => 'required|users,email,'. $user_id,
   'phone' => 'required|unique:dojos,phone,'. $request->id,
   'login' => 'required|unique:users,login,'. $user_id,
-  'identifier' => 'required|unique:dojos,identifier,'. $request->id,
+  // 'identifier' => 'required|unique:dojos,identifier,'. $request->id,
   'password' => 'required'
 ]);
      if(!$validator->passes())

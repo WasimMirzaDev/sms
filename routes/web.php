@@ -18,19 +18,19 @@ Route::prefix('admin')->middleware('isAdmin', 'auth')->group(function(){
     Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
     Route::get('profile',    'AdminController@profile')->name('admin.profile');
     Route::get('settings',   'AdminController@settings')->name('admin.settings');
-    Route::get('attendance', [App\Http\Controllers\AttendanceController::class, 'index'])->name('admin.attendance.show');
 });
 
-Route::prefix('attendance')->name('attendance.')->middleware('isAdmin', 'auth')->group(function(){
+Route::prefix('attendance')->name('attendance.')->middleware('isAdminOrDojo', 'auth')->group(function(){
+    Route::get('/upload', [App\Http\Controllers\AttendanceController::class, 'index'])->name('upload');
     Route::post('/save', [App\Http\Controllers\AttendanceController::class, 'store'])->name('save');
-    Route::get('attendance/daily', [App\Http\Controllers\AttendanceController::class, 'daily'])->name('daily');
-    Route::post('attendance/daily-report', [App\Http\Controllers\AttendanceController::class, 'daily_report'])->name('daily-report');
-    Route::get('attendance/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary'])->name('attendance-summary');
-    Route::post('attendance/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary_report'])->name('attendance-summary-report');
+    Route::get('/daily', [App\Http\Controllers\AttendanceController::class, 'daily'])->name('daily');
+    Route::post('/daily-report', [App\Http\Controllers\AttendanceController::class, 'daily_report'])->name('daily-report');
+    Route::get('/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary'])->name('attendance-summary');
+    Route::post('/summary', [App\Http\Controllers\AttendanceController::class, 'attendance_summary_report'])->name('attendance-summary-report');
 });
 
 
-Route::prefix('grading-policy')->name('grading-policy.')->middleware('isAdmin', 'auth')->group(function () {
+Route::prefix('grading-policy')->name('grading-policy.')->middleware('isAdminOrDojo', 'auth')->group(function () {
     Route::get('/show', [App\Http\Controllers\GradingPolicyController::class, 'index'])->name('show');
     Route::get('/edit/{id?}', [App\Http\Controllers\GradingPolicyController::class, 'edit'])->name('edit');
     Route::get('/delete/{id?}', [App\Http\Controllers\GradingPolicyController::class, 'destroy'])->name('delete');
@@ -104,7 +104,7 @@ Route::prefix('dojos')->name('dojos.')->middleware('isAdmin', 'auth')->group(fun
     Route::post('/save', [App\Http\Controllers\DojoController::class, 'store'])->name('save');
 });
 
-Route::prefix('events')->name('events.')->middleware('isAdmin', 'auth')->group(function () {
+Route::prefix('events')->name('events.')->middleware('isAdminOrDojo', 'auth')->group(function () {
     Route::post('/add', [App\Http\Controllers\EventController::class, 'add'])->name('add');
     Route::get('/show', [App\Http\Controllers\EventController::class, 'index'])->name('show');
     Route::post('/create', [App\Http\Controllers\EventController::class, 'create'])->name('create');

@@ -4,36 +4,30 @@
 $route_prefix = "events.";
 @endphp
 <style media="screen">
-#event_menu{
+#events_menu{
   color:white !important;
 }
 
      tr:hover {
           background: none !important;
         }
+        .fc-time{
+          display:inline-block !important;
+        }
 </style>
-
-
-
 
 <section id="widget-grid" class="">
     <div class="row">
        <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
           <div class="jarviswidget jarviswidget-sortable" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false" role="widget">
-             <header role="heading">
-                <div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus"></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
-                <span class="widget-icon"> <i class="fa fa-check txt-color-green"></i> </span>
-                <h2>Expense Type</h2>
-                <span class="jarviswidget-loader" style="display: none;"><i class="fa fa-refresh fa-spin"></i></span>
-             </header>
+
              <div role="content" style="display: block;">
                 <div class="jarviswidget-editbox">
                 </div>
                 <div class="widget-body no-padding">
-                        <div class="row" style="width:80%; margin:0 auto; display:block;">
+                        <div class="row">
 
-
-                          <div class="col-sm-12 col-md-12 col-lg-12">
+                          <div class="col-sm-9 col-md-9 col-lg-9">
 
                             <!-- new widget -->
                             <div class="jarviswidget jarviswidget-color-blueDark">
@@ -101,6 +95,21 @@ $route_prefix = "events.";
                             <!-- end widget -->
 
                           </div>
+                          <br>
+                          <br>
+                          @if(auth()->user()->role == 1)
+                          <div class="col-md-3">
+                          <b>  Select Dojo: </b>
+                            <select class="select2" onchange="refetch_events(this.value)">
+                              <option value="">All</option>
+                              @if(!empty($dojos))
+                                @foreach($dojos as $dojo)
+                                  <option value="{{$dojo->id}}">{{$dojo->name}}</option>
+                                @endforeach
+                              @endif
+                            </select>
+                          </div>
+                          @endif
 
                         </div>
 
@@ -118,5 +127,6 @@ $route_prefix = "events.";
        </article>
     </div>
  </section>
+
 
 @endsection
