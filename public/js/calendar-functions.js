@@ -73,44 +73,19 @@ $(document).ready(function() {
     var calendar =   $('#calendar').fullCalendar({
 
           header: hdr,
-          editable: false,
-          droppable: false,
+          editable: true,
+          droppable: true,
           selectable: true,
           selectHelper: true,
           events: "show",
-
-          eventMouseover: function (data, event, view) {
-            var mydate = new Date(data.start);
-                      tooltip = '<div class="tooltiptopicevent" style="color:white;width:auto;height:auto;background:'+data.color+';position:absolute;z-index:10001;padding:10px 20px 10px 20px ;  line-height: 20%; text-align:center; border-radius:4px;">' + 'title: ' + ': ' + data.ename +'</div>';
-
-                      $("body").append(tooltip);
-                      $(this).mouseover(function (e) {
-                          $(this).css('z-index', 10000);
-                          $('.tooltiptopicevent').fadeIn('500');
-                          $('.tooltiptopicevent').fadeTo('10', 1.9);
-                      }).mousemove(function (e) {
-                          $('.tooltiptopicevent').css('top', e.pageY + 10);
-                          $('.tooltiptopicevent').css('left', e.pageX + 20);
-                      });
-
-
-                  },
-                  eventMouseout: function (data, event, view) {
-                      $(this).css('z-index', 8);
-
-                      $('.tooltiptopicevent').remove();
-
-                  },
-
+          nextDayThreshold: '00:00:00',
           select: function (start, end, allDay) {
            start=moment(start).format('Y-MM-DD HH:mm');
            end = new Date(end);
-           end.setDate(end.getDate()-1);
+           end.setDate(end.getDate());
            end=moment(end).format('Y-MM-DD HH:mm');
-
            addNewEvent(start, end, 0);
          },
-
 
 
          eventDrop: function (event, delta) {
@@ -127,7 +102,7 @@ $(document).ready(function() {
                },
                type: "POST",
                success: function (response) {
-                   alert("Event Updated Successfully");
+                   _success('Event Updated Successfully');
                }
            });
        },
@@ -230,18 +205,21 @@ function saveEvent()
 						$("#event_modal").modal('hide');
   					$("button.save").prop("disabled",false);
   					var data = response['data'];
+         //    var response_data = response['data'];
   					var id = data['id'];
-            $("#calendar").fullCalendar('removeEvents', data['id']);
-            $("#calendar").fullCalendar('renderEvent',
-            {
-              id:    data['id'],
-              start: data['start'],
-              end: data['end'],
-              color: data['color'],
-              ename: data['title'],
-              allDay: false
-         },true);
-            $("#calendar").fullCalendar('unselect');
+         //    $("#calendar").fullCalendar('removeEvents', response_data['id']);
+         //    $("#calendar").fullCalendar('renderEvent',
+         //    {
+         //      id:    response_data['id'],
+         //      start: response_data['start'],
+         //      end: response_data['end'],
+         //      color: response_data['color'],
+         //      ename: response_data['title'],
+         //      title: response_data['title']
+         //
+         // },true);
+         //    $("#calendar").fullCalendar('unselect');
+         $('#calendar').fullCalendar('refetchEvents');
   					$(".overlay").hide();
   				}
   				else
@@ -288,7 +266,7 @@ function deleteEvent(id)
 		 $.post(formAction,{id:id},function(data){
 			 if(data['success'] == 1)
 			 {
-				 $("#calendar").fullCalendar('removeEvents', data['id']);
+        $('#calendar').fullCalendar('refetchEvents');
          $("#event_modal").modal('hide');
 				 _success(data['msg']);
 			 }
@@ -318,4 +296,13 @@ function refetch_events(dojo_id)
       $('#calendar').fullCalendar('removeEventSource', events);
       $('#calendar').fullCalendar('addEventSource', events);
       // $('#calendar').fullCalendar('refetchEvents');
+}
+
+
+function change_date(start_date)
+{
+    start_date = new Date(start_date);
+    start_date = new Date(start_date.getTime() + 30*60000);
+    start_date=moment(start_date).format('Y-MM-DDTHH:mm');
+    $("#end").val(start_date);
 }

@@ -23,7 +23,7 @@
                   <div class="col col-md-6">
                      <b>Start:</b><small style="color:red;">*</small>
                      <input type="hidden" name="id" value="{{$id}}">
-                     <input type="datetime-local" class="form-control" name="start" id="start" value="{{date('Y-m-d\TH:i:s', strtotime($start)) }}">
+                     <input type="datetime-local" class="form-control" onchange="change_date(this.value)" name="start" id="start" value="{{date('Y-m-d\TH:i:s', strtotime($start)) }}">
                   </div>
                   <div class="col col-md-6">
                      <b>End:</b><small style="color:red;">*</small>
@@ -62,6 +62,12 @@
                    </div>
                   </div>
                   @endif
+               <div class="row" style="margin-top:10px;">
+                  <div class="col col-md-12">
+                    <input type="checkbox" {{!empty($allDay) && $allDay == 'true' ? 'checked' : '' }} name="allDay" value="true">
+                     <b>All Day</b>
+                  </div>
+               </div>
                <div class="row" style="margin-top:10px;">
                   <div class="col col-md-12">
                      <b>Note:</b>

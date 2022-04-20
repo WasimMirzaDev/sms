@@ -566,7 +566,8 @@
 		<!-- PAGE RELATED PLUGIN(S)
 		<script src="..."></script>-->
 		<script src="{{asset('js/plugin/moment/moment.min.js')}}"></script>
-		<script src="{{asset('js/plugin/fullcalendar/jquery.fullcalendar.min.js')}}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 		<script src="{{asset('js/plugin/chartjs/chart.min.js')}}"></script>
 
 		<script src="{{asset('js/notification/SmartNotification.min.js')}}"></script>
@@ -589,5 +590,6 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 		<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 		<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
+		<script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
 	</body>
 </html>

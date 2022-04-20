@@ -11,6 +11,7 @@ $.ajaxSetup({
 		{
 			"pageLength": 25,
 			dom: 'Bfrtip',
+			select: true,
 	        buttons: [
 	            {
 	                extend: 'copyHtml5',
@@ -20,9 +21,12 @@ $.ajaxSetup({
 	            },
 	            {
 	                extend: 'excelHtml5',
-	                exportOptions: {
-	                    columns: ':visible'
-	                }
+									title: '',
+									exportOptions: {
+									modifier: {
+											selected: true
+									}
+							}
 	            },
 	            {
 	                extend: 'pdfHtml5',
@@ -31,7 +35,8 @@ $.ajaxSetup({
 	                }
 	            },
 	            'colvis'
-	        ]
+	        ],
+
 		}
 );
 $(".select2").select2();
